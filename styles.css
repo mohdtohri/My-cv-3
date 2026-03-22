@@ -233,14 +233,19 @@ section {
   justify-content: space-between;
 }
 .nav-logo {
-  font-size: 1.35rem;
-  font-weight: 900;
-  letter-spacing: 3px;
-  background: var(--grad-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   cursor: default;
+  display: flex;
+  align-items: center;
+}
+.nav-logo-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid var(--c-purple);
+  box-shadow: 0 0 12px rgba(129,140,248,0.55);
+  display: block;
 }
 .nav-links {
   display: flex;
