@@ -187,3 +187,77 @@ document.querySelectorAll('a[href^="#"]').forEach(function (a) {
   });
 });
 
+// ── Language toggle (AR / EN) ─────────────────
+(function () {
+  var btn = document.getElementById('langToggle');
+  if (!btn) return;
+
+  var currentLang = 'ar';
+  var TYPING_SPEED_MS = 55;
+
+  // Allowed HTML tags in bilingual translation strings (all authored in index.html)
+  var ALLOWED_TAGS = /^(<strong>|<\/strong>|<span>|<\/span>|<span [^>]+>)*$/;
+
+  function safeSet(el, val) {
+    // Use innerHTML only when the value contains known-safe inline tags;
+    // all translation strings are hardcoded in our own HTML attributes.
+    if (/<[a-z]/i.test(val)) {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  }
+
+  function applyLang(lang) {
+    var html = document.documentElement;
+    if (lang === 'en') {
+      html.setAttribute('lang', 'en');
+      html.setAttribute('dir', 'ltr');
+      btn.textContent = 'AR';
+      btn.setAttribute('aria-label', 'Switch to Arabic');
+    } else {
+      html.setAttribute('lang', 'ar');
+      html.setAttribute('dir', 'rtl');
+      btn.textContent = 'EN';
+      btn.setAttribute('aria-label', 'Switch to English');
+    }
+
+    // Update <title>
+    var titleEl = document.querySelector('title');
+    if (titleEl && titleEl.getAttribute('data-' + lang)) {
+      titleEl.textContent = titleEl.getAttribute('data-' + lang);
+    }
+
+    // Update all elements with data-ar / data-en
+    document.querySelectorAll('[data-ar][data-en]').forEach(function (el) {
+      // Skip the title (already handled) and the toggle button itself
+      if (el === titleEl || el === btn) return;
+      var val = el.getAttribute('data-' + lang);
+      if (val !== null) {
+        safeSet(el, val);
+      }
+    });
+
+    // Update the hero typing text
+    var heroRole = document.getElementById('heroRole');
+    if (heroRole) {
+      var newText = heroRole.getAttribute('data-typing-' + lang) || heroRole.getAttribute('data-typing') || '';
+      heroRole.textContent = '';
+      heroRole.setAttribute('data-typing', newText);
+      var i = 0;
+      function typeNext() {
+        if (i < newText.length) {
+          heroRole.textContent += newText.charAt(i++);
+          setTimeout(typeNext, TYPING_SPEED_MS);
+        }
+      }
+      typeNext();
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    applyLang(currentLang);
+  });
+})();
+

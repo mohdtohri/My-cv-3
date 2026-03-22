@@ -64,6 +64,11 @@ body {
   direction: rtl;
 }
 
+/* LTR override when language is switched to English */
+html[dir="ltr"] body {
+  direction: ltr;
+}
+
 /* Mesh background */
 body::before {
   content: '';
@@ -291,6 +296,33 @@ section {
   background: var(--c-text);
   border-radius: 2px;
   transition: var(--trans);
+}
+
+/* Language toggle button */
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 20px;
+  background: rgba(129,140,248,0.15);
+  border: 1px solid var(--c-purple);
+  color: var(--c-purple);
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: var(--trans);
+  flex-shrink: 0;
+}
+.lang-btn:hover {
+  background: var(--grad-primary);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(129,140,248,0.5);
 }
 
 /* ================================================
