@@ -1,260 +1,189 @@
-/* ============================================
-   script.js - Animations & Interactions
-   ============================================ */
+/* ==============================================
+   script.js – Professional CV Interactions
+   ============================================== */
 
-// ─── Particles Background ───────────────────
-(function createParticles() {
-  const container = document.getElementById('particles');
-  if (!container) return;
+// ── Particles ─────────────────────────────────
+(function () {
+  var cont = document.getElementById('particles');
+  if (!cont) return;
 
-  const colors = ['#6C63FF', '#a855f7', '#FF6584', '#43E97B', '#38f9d7'];
-  const count = window.innerWidth < 600 ? 18 : 35;
+  var colors = ['#818cf8', '#a78bfa', '#22d3ee', '#2dd4bf', '#fb7185', '#fbbf24'];
+  var count  = window.innerWidth < 600 ? 20 : 40;
 
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement('span');
-    p.classList.add('particle');
+  for (var i = 0; i < count; i++) {
+    var el    = document.createElement('span');
+    var size  = (Math.random() * 10 + 3).toFixed(1);
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    var left  = (Math.random() * 100).toFixed(2);
+    var dur   = (Math.random() * 22 + 18).toFixed(1);
+    var del   = (Math.random() * 20).toFixed(1);
+    var opa   = (Math.random() * 0.12 + 0.05).toFixed(2);
 
-    const size = Math.random() * 12 + 4;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const left = Math.random() * 100;
-    const delay = Math.random() * 15;
-    const duration = Math.random() * 20 + 15;
-
-    p.style.cssText = `
-      width: ${size}px;
-      height: ${size}px;
-      background: ${color};
-      left: ${left}%;
-      animation-delay: ${delay}s;
-      animation-duration: ${duration}s;
-    `;
-    container.appendChild(p);
+    el.className = 'p';
+    el.style.cssText =
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'background:' + color + ';' +
+      'left:' + left + '%;' +
+      'opacity:' + opa + ';' +
+      'animation-duration:' + dur + 's;' +
+      'animation-delay:-' + del + 's;';
+    cont.appendChild(el);
   }
 })();
 
-// ─── Navbar Scroll Effect ────────────────────
-(function initNavbar() {
-  const navbar = document.getElementById('navbar');
-  if (!navbar) return;
+// ── Navbar scroll effect ───────────────────────
+(function () {
+  var nav = document.getElementById('navbar');
+  if (!nav) return;
 
-  function onScroll() {
-    if (window.scrollY > 60) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+  function tick() {
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
   }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('scroll', tick, { passive: true });
+  tick();
 })();
 
-// ─── Mobile Nav Toggle ───────────────────────
-(function initMobileNav() {
-  const toggle = document.getElementById('navToggle');
-  const links = document.querySelector('.nav-links');
-  if (!toggle || !links) return;
+// ── Mobile nav toggle ──────────────────────────
+(function () {
+  var btn   = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  if (!btn || !links) return;
 
-  toggle.addEventListener('click', () => {
-    links.classList.toggle('open');
-    const spans = toggle.querySelectorAll('span');
-    const isOpen = links.classList.contains('open');
-    spans[0].style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
-    spans[1].style.opacity = isOpen ? '0' : '1';
-    spans[2].style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
+  btn.addEventListener('click', function () {
+    var open = links.classList.toggle('open');
+    var sp   = btn.querySelectorAll('span');
+    sp[0].style.transform = open ? 'rotate(45deg) translate(5px,5px)'  : '';
+    sp[1].style.opacity   = open ? '0' : '1';
+    sp[2].style.transform = open ? 'rotate(-45deg) translate(5px,-5px)' : '';
   });
 
-  // Close nav on link click
-  links.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
+  links.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
       links.classList.remove('open');
-      toggle.querySelectorAll('span').forEach(s => {
+      btn.querySelectorAll('span').forEach(function (s) {
         s.style.transform = '';
-        s.style.opacity = '';
+        s.style.opacity   = '';
       });
     });
   });
 })();
 
-// ─── Scroll Spy (active nav link) ───────────
-(function initScrollSpy() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  if (!sections.length || !navLinks.length) return;
+// ── Scroll-spy active nav link ─────────────────
+(function () {
+  var sections = document.querySelectorAll('section[id]');
+  var anchors  = document.querySelectorAll('.nav-links a');
+  if (!sections.length || !anchors.length) return;
 
-  function onScroll() {
-    const scrollPos = window.scrollY + 120;
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      const id = section.getAttribute('id');
-      if (scrollPos >= top && scrollPos < top + height) {
-        navLinks.forEach(a => {
-          a.style.color = '';
-          a.style.background = '';
-        });
-        const active = document.querySelector(`.nav-links a[href="#${id}"]`);
-        if (active) {
-          active.style.color = '#fff';
-          active.style.background = 'rgba(108, 99, 255, 0.2)';
-        }
+  function spy() {
+    var y = window.scrollY + 90;
+    sections.forEach(function (sec) {
+      if (y >= sec.offsetTop && y < sec.offsetTop + sec.offsetHeight) {
+        anchors.forEach(function (a) { a.classList.remove('active'); });
+        var hit = document.querySelector('.nav-links a[href="#' + sec.id + '"]');
+        if (hit) hit.classList.add('active');
       }
     });
   }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', spy, { passive: true });
 })();
 
-// ─── AOS-like Scroll Reveal ──────────────────
-(function initScrollReveal() {
-  const elements = document.querySelectorAll('[data-aos]');
-  if (!elements.length) return;
+// ── Scroll-reveal (data-sr) ────────────────────
+(function () {
+  var els = document.querySelectorAll('[data-sr]');
+  if (!els.length) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const delay = parseInt(el.getAttribute('data-delay') || '0', 10);
-        setTimeout(() => {
-          el.classList.add('aos-animate');
-        }, delay);
-        observer.unobserve(el);
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var delay = parseInt(e.target.getAttribute('data-sr-delay') || '0', 10);
+        setTimeout(function () { e.target.classList.add('vis'); }, delay);
+        io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
-  elements.forEach(el => observer.observe(el));
+  els.forEach(function (el) { io.observe(el); });
 })();
 
-// ─── Animated Skill Bars ─────────────────────
-(function initSkillBars() {
-  const bars = document.querySelectorAll('.skill-progress');
+// ── Skill bars ─────────────────────────────────
+(function () {
+  var bars = document.querySelectorAll('.sk-bar');
   if (!bars.length) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const bar = entry.target;
-        const width = bar.getAttribute('data-width');
-        setTimeout(() => {
-          bar.style.width = width + '%';
-          bar.classList.add('animated');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var bar = e.target;
+        setTimeout(function () {
+          bar.style.width = bar.getAttribute('data-w') + '%';
         }, 200);
-        observer.unobserve(bar);
+        io.unobserve(bar);
       }
     });
   }, { threshold: 0.3 });
 
-  bars.forEach(bar => observer.observe(bar));
+  bars.forEach(function (b) { io.observe(b); });
 })();
 
-// ─── Animated Counters ───────────────────────
-(function initCounters() {
-  const counters = document.querySelectorAll('.stat-number');
-  if (!counters.length) return;
+// ── Counter animation ──────────────────────────
+(function () {
+  var nums = document.querySelectorAll('[data-target]');
+  if (!nums.length) return;
 
-  function animateCounter(el, target, isDecimal) {
-    const duration = 1800;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    let step = 0;
-
-    const timer = setInterval(() => {
+  function run(el, target, dec) {
+    var start = 0;
+    var steps = 60;
+    var inc   = target / steps;
+    var step  = 0;
+    var t = setInterval(function () {
       step++;
-      current = step < steps ? increment * step : target;
-
-      if (isDecimal) {
-        el.textContent = current.toFixed(2);
-      } else {
-        el.textContent = Math.round(current);
-      }
-
-      if (step >= steps) clearInterval(timer);
-    }, duration / steps);
+      var val = step < steps ? inc * step : target;
+      el.textContent = dec ? val.toFixed(2) : Math.round(val);
+      if (step >= steps) clearInterval(t);
+    }, 1800 / steps);
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const raw = parseFloat(el.getAttribute('data-target'));
-        const isDecimal = !Number.isInteger(raw);
-        animateCounter(el, raw, isDecimal);
-        observer.unobserve(el);
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var el  = e.target;
+        var raw = parseFloat(el.getAttribute('data-target'));
+        run(el, raw, !Number.isInteger(raw));
+        io.unobserve(el);
       }
     });
   }, { threshold: 0.5 });
 
-  counters.forEach(el => observer.observe(el));
+  nums.forEach(function (el) { io.observe(el); });
 })();
 
-// ─── Smooth scroll for anchor links ─────────
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) {
+// ── Typing effect for hero role ────────────────
+(function () {
+  var el = document.getElementById('heroRole');
+  if (!el) return;
+
+  var text  = el.getAttribute('data-typing') || '';
+  var i     = 0;
+  var speed = 55;
+
+  function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i++);
+      setTimeout(type, speed);
+    }
+  }
+  setTimeout(type, 1000);
+})();
+
+// ── Smooth scroll for anchor links ────────────
+document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+  a.addEventListener('click', function (e) {
+    var tgt = document.querySelector(a.getAttribute('href'));
+    if (tgt) {
       e.preventDefault();
-      const offset = 70;
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top: tgt.offsetTop - 68, behavior: 'smooth' });
     }
   });
 });
 
-// ─── Course cards stagger animation ──────────
-(function initCourseStagger() {
-  const cards = document.querySelectorAll('.course-card');
-  if (!cards.length) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const card = entry.target;
-        const delay = parseInt(card.getAttribute('data-delay') || '0', 10);
-        setTimeout(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0) scale(1)';
-        }, delay);
-        observer.unobserve(card);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  cards.forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px) scale(0.95)';
-    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(card);
-  });
-})();
-
-// ─── Typing effect for hero title ────────────
-(function initTypingEffect() {
-  const titleEl = document.querySelector('.hero-title');
-  if (!titleEl) return;
-
-  const originalText = titleEl.textContent.trim();
-  titleEl.textContent = '';
-  titleEl.style.borderRight = '2px solid rgba(108,99,255,0.7)';
-  titleEl.style.paddingLeft = '2px';
-
-  let i = 0;
-  const speed = 60;
-
-  function type() {
-    if (i < originalText.length) {
-      titleEl.textContent += originalText.charAt(i);
-      i++;
-      setTimeout(type, speed);
-    } else {
-      // Blink cursor then remove
-      setTimeout(() => {
-        titleEl.style.borderRight = 'none';
-      }, 1500);
-    }
-  }
-
-  // Start after hero pop-in
-  setTimeout(type, 900);
-})();
