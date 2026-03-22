@@ -32,13 +32,15 @@
         </ul>
       </div>
       <div class="nav-end">
-        <button class="lang-btn" id="langToggle" aria-label="Switch language">EN</button>
-        <button class="nav-toggle" id="navToggle" aria-label="قائمة">
+        <button class="nav-toggle" id="navToggle" aria-label="قائمة" data-ar-label="قائمة" data-en-label="Menu">
           <span></span><span></span><span></span>
         </button>
+        <button class="lang-btn" id="langToggle" aria-label="Switch language">EN</button>
       </div>
     </div>
   </nav>
+  <!-- Overlay to close mobile menu when clicking outside -->
+  <div class="nav-overlay" id="navOverlay"></div>
 
   <!-- ═══ HERO ══════════════════════════════════ -->
   <section id="home">

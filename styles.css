@@ -247,6 +247,24 @@ section {
   align-items: center;
   gap: 0.5rem;
 }
+
+/* Nav overlay – covers page content when mobile menu is open */
+.nav-overlay {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 8998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.nav-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
 .nav-logo {
   cursor: default;
   display: flex;
@@ -1040,6 +1058,17 @@ a.ct-val:hover { color: var(--c-purple); }
   }
   html[dir="ltr"] .nav-links.open { transform: translateX(0); }
   .nav-toggle { display: flex; }
+
+  /* ── Hamburger alignment ──────────────────────────────────────
+     HTML order: nav-toggle first, lang-btn second.
+     RTL (default): flex flows right→left, so nav-toggle lands on
+       the right (inner) side of nav-end – closer to the logo.
+     LTR: row-reverse puts nav-toggle on the right edge of nav-end
+       (far right of the navbar), and lang-btn to its left. */
+  html[dir="ltr"] .nav-end {
+    flex-direction: row-reverse;
+  }
+
   .stats-row { grid-template-columns: repeat(3, 1fr); }
 }
 

@@ -46,27 +46,48 @@
 
 // ── Mobile nav toggle ──────────────────────────
 (function () {
-  var btn   = document.getElementById('navToggle');
-  var links = document.getElementById('navLinks');
+  var btn     = document.getElementById('navToggle');
+  var links   = document.getElementById('navLinks');
+  var overlay = document.getElementById('navOverlay');
   if (!btn || !links) return;
 
+  function openMenu() {
+    links.classList.add('open');
+    if (overlay) overlay.classList.add('visible');
+    var sp = btn.querySelectorAll('span');
+    sp[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    sp[1].style.opacity   = '0';
+    sp[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  }
+
+  function closeMenu() {
+    links.classList.remove('open');
+    if (overlay) overlay.classList.remove('visible');
+    btn.querySelectorAll('span').forEach(function (s) {
+      s.style.transform = '';
+      s.style.opacity   = '';
+    });
+  }
+
   btn.addEventListener('click', function () {
-    var open = links.classList.toggle('open');
-    var sp   = btn.querySelectorAll('span');
-    sp[0].style.transform = open ? 'rotate(45deg) translate(5px,5px)'  : '';
-    sp[1].style.opacity   = open ? '0' : '1';
-    sp[2].style.transform = open ? 'rotate(-45deg) translate(5px,-5px)' : '';
+    if (links.classList.contains('open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   });
 
+  // Close menu when clicking the overlay (outside the sidebar)
+  if (overlay) {
+    overlay.addEventListener('click', closeMenu);
+  }
+
   links.querySelectorAll('a').forEach(function (a) {
-    a.addEventListener('click', function () {
-      links.classList.remove('open');
-      btn.querySelectorAll('span').forEach(function (s) {
-        s.style.transform = '';
-        s.style.opacity   = '';
-      });
-    });
+    a.addEventListener('click', closeMenu);
   });
+
+  // Expose closeMenu so the language toggle can call it
+  window._closeNavMenu = closeMenu;
 })();
 
 // ── Scroll-spy active nav link ─────────────────
@@ -209,6 +230,11 @@ document.querySelectorAll('a[href^="#"]').forEach(function (a) {
   }
 
   function applyLang(lang) {
+    // Close the mobile menu whenever the language changes
+    if (typeof window._closeNavMenu === 'function') {
+      window._closeNavMenu();
+    }
+
     var html = document.documentElement;
     if (lang === 'en') {
       html.setAttribute('lang', 'en');
@@ -226,6 +252,13 @@ document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     var titleEl = document.querySelector('title');
     if (titleEl && titleEl.getAttribute('data-' + lang)) {
       titleEl.textContent = titleEl.getAttribute('data-' + lang);
+    }
+
+    // Update aria-label of the hamburger toggle button
+    var navToggle = document.getElementById('navToggle');
+    if (navToggle) {
+      var toggleLabel = navToggle.getAttribute('data-' + lang + '-label');
+      if (toggleLabel) navToggle.setAttribute('aria-label', toggleLabel);
     }
 
     // Update all elements with data-ar / data-en
