@@ -237,6 +237,16 @@ section {
   align-items: center;
   justify-content: space-between;
 }
+.nav-start {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.nav-end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 .nav-logo {
   cursor: default;
   display: flex;
